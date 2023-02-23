@@ -12,7 +12,7 @@ const server = http.createServer((req, resp) => {
         return;
       }
 
-      const { pathname } = url.parse(req.url);
+      const { pathname, search } = url.parse(req.url);
 
       if (pathname !== '/calculator') {
         server.emit('error', new Error('Invalid URL'));
@@ -20,14 +20,10 @@ const server = http.createServer((req, resp) => {
       }
 
       if (pathname === '/calculator') {
-        const urlParams = new URL(
-          req.url,
-          `http://${req.headers.hostname}/calculator`
-        );
-        const query = urlParams.searchParams;
+        const urlParams = new URLSearchParams(search!);
 
-        const a = Number(query.get('a'));
-        const b = Number(query.get('b'));
+        const a = Number(urlParams.get('a'));
+        const b = Number(urlParams.get('b'));
         const sum = a + b;
         const rest = a - b;
         const multiply = a * b;
